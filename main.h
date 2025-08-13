@@ -1,6 +1,6 @@
 //Constants
 #define G 0.00430091733 //in pc*km^2*s^-2*Msun^-1
-//#define G 0.00449850214  //in pc*km^2*s^-2*Msun^-1 consistent with IAU2009 SAC
+//#define G 0.00449850214  //in pc^3*Myr^-2*Msun^-1 consistent with IAU2009 SAC
 #define Pi 3.14159265
 #define PI 3.14159265
 #define TWOPI 6.2831853   /* 2PI */
