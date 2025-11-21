@@ -3683,12 +3683,33 @@ int get_binaries(int nbin, double **star, double M, double rvir, int pairing, in
 					double lPmin = 0.15, alpha = 0.45; //Sana et al., (2012); Oh, S., Kroupa, P., & Pflamm-Altenburg, J. (2015)
 					double ralpha = 1/alpha, eta = alpha/0.23;
 					lP = pow(pow(lPmin,alpha) + eta*drand48(),ralpha);
-				} else if (OBperiods==3){
-					if((m1*M>msort) || (m2*msort>msort))
-				} else{
+				}
+				else if (OBperiods==3) {
+    				double m_main = (m1*M > m2*M) ? m1*M : m2*M;
+                    if (m_main >= msort && m_main < 8.0){
+                        double alpha = 0.45;
+                        double lPmin = log10(2.0);  // Pmin = 2days
+                        double lPmax = log10(50.0); // Pmax = 50days
+                        double u = drand48();
+                        lP = pow( pow(lPmin, alpha) + u * (pow(lPmax, alpha) - pow(lPmin, alpha)), 1.0/alpha );
+    				}
+    				if (m_main >= 8.0 && m_main < 10.0){
+                        double alpha = 0.45;
+                        double lPmin = log10(5.0);   // Pmin = 5 days
+                        double lPmax = log10(80.0);  // Pmax = 80 days
+                        double u = drand48();
+                        lP = pow( pow(lPmin, alpha) + u * (pow(lPmax, alpha) - pow(lPmin, alpha)), 1.0/alpha );
+    				}
+    				if (m_main >= 10.0){
+                        double lPmin = 0.15, alpha = 0.45; //Sana et al., (2012); Oh, S., Kroupa, P., & Pflamm-Altenburg, J. (2015)
+    					double ralpha = 1/alpha, eta = alpha/0.23;
+    					lP = pow(pow(lPmin,alpha) + eta*drand48(),ralpha);
+    				}
+				}
+				else {
 					//derive from Sana & Evans (2011) period distribution for massive binaries
 					double lPmin = 0.3, lPmax = 3.5, lPbreak = 1.0; //parameters of Sana & Evans (2011) period distribution in days (eq. 5.1)
-					double Fbreak = 0.5; //fraction of binaries with periods below Pbreak
+
 					double xperiod = drand48();
 					if (xperiod <= Fbreak)
 						lP = xperiod *(lPbreak-lPmin)/Fbreak + lPmin;
@@ -3757,7 +3778,6 @@ int get_binaries(int nbin, double **star, double M, double rvir, int pairing, in
 				abin /= rvir;//Nbody units
             }
 
-
             if (!i && OBperiods && msort) {
 			  if (OBperiods==2) {
 			    printf("\nDeriving semi-major axis distribution for binaries with primary masses > %.3f Msun from Sana et al., (2012); Oh, S., Kroupa, P., & Pflamm-Altenburg, J. (2015) period distribution.\n",msort);
@@ -3768,7 +3788,6 @@ int get_binaries(int nbin, double **star, double M, double rvir, int pairing, in
 			    printf("\nDeriving semi-major axis distribution for binaries with primary masses > %.3f Msun from Sana & Evans (2011) period distribution.\n",msort);
 			  }
 			}
-
 
 			//Specify eccentricity distribution
 			if (!i && OBperiods && msort) {
@@ -3793,7 +3812,7 @@ int get_binaries(int nbin, double **star, double M, double rvir, int pairing, in
                     ecc = drand48();
                     if (ecc < fcirc) ecc = 0.0;
                     else {
-                        ecc = 2.0*log((ecc-k2)/k1);
+                        ecc = 2.1*log((ecc-k2)/k1);
                     }
                 }
                 else if (OBperiods==2){
@@ -3803,6 +3822,32 @@ int get_binaries(int nbin, double **star, double M, double rvir, int pairing, in
                     do{
                         ecc = pow(drand48(), 1.0/0.55); // f=0.55ecc^(-0.45)
                     }while(ecc>elimit);
+                }
+                else if (OBperiods==3){
+                    // define m_main as a main star (more massive one)
+                    double m_main = (m1*M > m2*M) ? m1*M : m2*M;
+                    if (m_main >= msort && m_main < 8.0){
+                        double Pmin=log10(2.0); // consistent with Sana et al. (2012)
+                        double elimit = 0.2; // maximum eccentricity for AIC-boost
+                        do{
+                            ecc = pow(drand48(), 1.0/0.55); // f=0.55ecc^(-0.45)
+                        }while(ecc>elimit);
+    				}
+    				if (m_main >= 8.0 && m_main < 10.0){
+                        double Pmin=log10(5.0); // consistent with Sana et al. (2012)
+                        double elimit = 0.2; // maximum eccentericity for ECSN-boost
+                        do{
+                            ecc = pow(drand48(), 1.0/0.55); // f=0.55ecc^(-0.45)
+                        }while(ecc>elimit);
+    				}
+    				if (m_main >= 10.0){
+        				double Pmin=pow(10.0,0.15); // consistent with Sana et al. (2012)
+                        assert(P>0.0);
+                        double elimit = 1.0 - pow((P*365.25/Pmin),-2.0/3.0);
+                        do{
+                            ecc = pow(drand48(), 1.0/0.55); // f=0.55ecc^(-0.45)
+                        }while(ecc>elimit);
+    				}
                 }
 			} else {
 				ecc = sqrt(drand48());   // Thermal distribution f(e)=2e
