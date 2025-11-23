@@ -3827,18 +3827,10 @@ int get_binaries(int nbin, double **star, double M, double rvir, int pairing, in
                     // define m_main as a main star (more massive one)
                     double m_main = (m1*M > m2*M) ? m1*M : m2*M;
                     if (m_main >= msort && m_main < 8.0){
-                        double Pmin=log10(2.0); // consistent with Sana et al. (2012)
-                        double elimit = 0.2; // maximum eccentricity for AIC-boost
-                        do{
-                            ecc = pow(drand48(), 1.0/0.55); // f=0.55ecc^(-0.45)
-                        }while(ecc>elimit);
+                        ecc = 0.0; // AIC-boost
     				}
     				if (m_main >= 8.0 && m_main < 10.0){
-                        double Pmin=log10(5.0); // consistent with Sana et al. (2012)
-                        double elimit = 0.2; // maximum eccentericity for ECSN-boost
-                        do{
-                            ecc = pow(drand48(), 1.0/0.55); // f=0.55ecc^(-0.45)
-                        }while(ecc>elimit);
+                        ecc = 0.0; // ECSN-boost
     				}
     				if (m_main >= 10.0){
         				double Pmin=pow(10.0,0.15); // consistent with Sana et al. (2012)
@@ -4326,9 +4318,9 @@ int order(double **star, int N, double M, double msort, int pairing){
     			star_temp[j][14] = star[(int) masses[i][1]][14];
     			mask[i] = 1;
     			j++;
-    			// Find the second one based on uniform mass ratio, but the range is set to 0.4 to 0.8
+    			// Find the second one based on uniform mass ratio, but the range is set to 0.9 to 1.0
     			if (i<N-1) {
-    				double mpair = (drand48()*0.4+0.4)*masses[i][0];
+    				double mpair = (drand48()*0.1+0.9)*masses[i][0];
     				// second index
     				int k = -1;
     				// find closest one
