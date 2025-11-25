@@ -107,7 +107,7 @@ int main (int argv, char **argc) {
 	int pairing = 3;				//Pairing of binary components; 0= random pairing, 1= ordered pairing for components with masses M>msort, 2= random but separate pairing for components with masses m>Msort; 3= Use period distribution for M>msort from Sana et al. (2011,2012) and Oh et al. (2015); 4= Use AIC/ECSN-boost sampling
 	double msort = 5.0;				//Stars with masses > msort will be sorted and preferentially paired into binaries if pairing = 1
 	int adis = 1;					//Semi-major axis distribution; 0= flat ranging from amin to amax, 1= based on Kroupa (1995) period distribution, 2= based on Duquennoy & Mayor (1991) period distribution, 3= based on Kroupa (1995) period distribution
-	int OBperiods = 2;				//1: Use period distribution for massive binaries with M_primary > msort from Sana & Evans (2011); 2: Uniform distribution of mass ratio (0.1<q<1.0) for m>Msort and random pairing for remaining (Kiminki & Kobulnicky 2012; Sana et al., 2012; Kobulnicky et al. 2014; Oh, S., Kroupa, P., & Pflamm-Altenburg, J. (2015) period distribution for M>Msort (implemented by Long Wang); 3= for AIC/ECSN-boost model sampling, only use for pairing=4 case (implemented by Ryutaro Iwakura)
+	int OBperiods = 2;				//1: Use period distribution for massive binaries with M_primary > msort from Sana & Evans (2011); 2: Uniform distribution of mass ratio (0.1<q<1.0) for m>Msort and random pairing for remaining (Kiminki & Kobulnicky 2012; Sana et al., 2012; Kobulnicky et al. 2014; Oh, S., Kroupa, P., & Pflamm-Altenburg, J. (2015) period distribution for M>Msort (implemented by Long Wang); 3= for AIC/ECSN-boost model sampling, users must use combining with pairing=4 (implemented by Ryutaro Iwakura)
 	double amin = 0.0001;			//Minimum semi-major axis for adis = 0 [pc]
 	double amax = 0.01;				//Maximum semi-major axis for adis = 0 [pc]
 #ifdef SSE
@@ -3797,7 +3797,7 @@ int get_binaries(int nbin, double **star, double M, double rvir, int pairing, in
                     printf("\nApplying thermal eccentricity distribution for low-mass systems and Sana et al. (2012), Oh, S., Kroupa, P., & Pflamm-Altenburg, J. (2015) eccentricity distribution for high-mass systems.\n");
                 } else if (OBperiods==3){
                     printf("\nApplying thermal eccentricity distribution for low-mass systems and Sana et al. (2012), Oh, S., Kroupa, P., & Pflamm-Altenburg, J. (2015) eccentricity distribution for high-mass systems.\n");
-					printf("The range of eccentricities are 0-1 for >10Msun, 0<e<0.2 for 5-8 (AIC) and 8-10 Msun (ECSN).\n")
+					printf("The range of eccentricities are 0-1 for >10Msun, e=0 for 5-8 (AIC) and 8-10 Msun (ECSN).\n")
 				}
             }
 			else if (!i) printf("\nApplying thermal eccentricity distribution.\n");
@@ -5811,8 +5811,8 @@ void help(double msort) {
     printf("                    2= Sana et al. (2012) (default)                  \n");
     printf("                    3= only use for -p 4 case (AIC/ECSN-boost)       \n");
     printf("                       The distribution is Sana et al., but the range of e and P differ \n");
-    printf("                       AIC : 5-8  Msun: e < 0.2, 3  days < P < 100 days      \n");
-    printf("                       ECSN: 8-10 Msun: e < 0.2, 10 days < P < 300 days \n");
+    printf("                       AIC : 5-8  Msun: e = 0, 2  days < P < 50 days      \n");
+    printf("                       ECSN: 8-10 Msun: e = 0, 5 days < P < 80 days \n");
     printf("                       Sana: > 10 Msun: Sana et al. (2012)           \n");
 	printf("       -s <number> (seed for randomization; 0= randomize by timer)   \n");
 	printf("       -t <0|1|2|3> (tidal field; 0= no tidal field, 1= near-field,  \n");
