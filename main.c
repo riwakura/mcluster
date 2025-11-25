@@ -3709,7 +3709,7 @@ int get_binaries(int nbin, double **star, double M, double rvir, int pairing, in
 				else {
 					//derive from Sana & Evans (2011) period distribution for massive binaries
 					double lPmin = 0.3, lPmax = 3.5, lPbreak = 1.0; //parameters of Sana & Evans (2011) period distribution in days (eq. 5.1)
-
+					double Fbreak = 0.5;
 					double xperiod = drand48();
 					if (xperiod <= Fbreak)
 						lP = xperiod *(lPbreak-lPmin)/Fbreak + lPmin;
@@ -3782,8 +3782,8 @@ int get_binaries(int nbin, double **star, double M, double rvir, int pairing, in
 			  if (OBperiods==2) {
 			    printf("\nDeriving semi-major axis distribution for binaries with primary masses > %.3f Msun from Sana et al., (2012); Oh, S., Kroupa, P., & Pflamm-Altenburg, J. (2015) period distribution.\n",msort);
 			  }  else if (OBperiods==3){
-				printf("\nDeriving semi-major axis distribution for binaries for AIC/ECSN-boost model using Sana et al., (2012); Oh, S., Kroupa, P., & Pflamm-Altenburg, J. (2015) period distribution.\n")
-				printf("The range of Period differs from >10Msun to 5-8 (AIC) and 8-10 Msun (ECSN).\n")
+				printf("\nDeriving semi-major axis distribution for binaries for AIC/ECSN-boost model using Sana et al., (2012); Oh, S., Kroupa, P., & Pflamm-Altenburg, J. (2015) period distribution.\n");
+				printf("The range of Period differs from >10Msun to 5-8 (AIC) and 8-10 Msun (ECSN).\n");
 			  } else {
 			    printf("\nDeriving semi-major axis distribution for binaries with primary masses > %.3f Msun from Sana & Evans (2011) period distribution.\n",msort);
 			  }
@@ -3797,7 +3797,7 @@ int get_binaries(int nbin, double **star, double M, double rvir, int pairing, in
                     printf("\nApplying thermal eccentricity distribution for low-mass systems and Sana et al. (2012), Oh, S., Kroupa, P., & Pflamm-Altenburg, J. (2015) eccentricity distribution for high-mass systems.\n");
                 } else if (OBperiods==3){
                     printf("\nApplying thermal eccentricity distribution for low-mass systems and Sana et al. (2012), Oh, S., Kroupa, P., & Pflamm-Altenburg, J. (2015) eccentricity distribution for high-mass systems.\n");
-					printf("The range of eccentricities are 0-1 for >10Msun, e=0 for 5-8 (AIC) and 8-10 Msun (ECSN).\n")
+					printf("The range of eccentricities are 0-1 for >10Msun, e=0 for 5-8 (AIC) and 8-10 Msun (ECSN).\n");
 				}
             }
 			else if (!i) printf("\nApplying thermal eccentricity distribution.\n");
@@ -4318,9 +4318,9 @@ int order(double **star, int N, double M, double msort, int pairing){
     			star_temp[j][14] = star[(int) masses[i][1]][14];
     			mask[i] = 1;
     			j++;
-    			// Find the second one based on uniform mass ratio, but the range is set to 0.9 to 1.0
+    			// Find the second one based on uniform mass ratio, but the range is set to 0.8 to 1.0
     			if (i<N-1) {
-    				double mpair = (drand48()*0.1+0.9)*masses[i][0];
+    				double mpair = (drand48()*0.2+0.8)*masses[i][0];
     				// second index
     				int k = -1;
     				// find closest one
@@ -4394,7 +4394,7 @@ int order(double **star, int N, double M, double msort, int pairing){
 				star_temp[j][14] = star[(int) masses[i][1]][14];
 				mask[i] = 1;
 				j++;
-				// Find the second one based on uniform mass ratio, but the range is set to 0.8 to 1.0~
+				// Find the second one based on uniform mass ratio, but the range is set to 0.8 to 1.0
 				if (i<N-1) {
 					double mpair = (drand48()*0.2+0.8)*masses[i][0];
 					// second index
@@ -5796,8 +5796,8 @@ void help(double msort) {
 	printf("                   3= random but use uniform (0.1-1.0) distribution  \n");
     printf("                      from Sana et al., (2012) for M>%.1f Msun) (default)\n",msort);
 	printf("                   4= AIC/ECSN-boosting sampling method              \n");
-	printf("                      For 5-8 Msun, mass ratio is set to >0.8 (AIC-boost)\n");
-	printf("                      For 8-10 Msun, mass ratio is set to >0.8 (ECSN-boost)  \n");
+	printf("                      For 5-8 Msun, mass ratio is set to > 0.8 (AIC-boost)\n");
+	printf("                      For 8-10 Msun, mass ratio is set to > 0.8 (ECSN-boost)  \n");
 	printf("                      For > 10 Msun, msas ratio is set to uniform distribution (Sana+2012) \n");
     printf("       -d <0|1|2|3> (binary semi-major axis distribution for M<%.1f Msun:\n",msort);
     printf("                    0= flat ranging from amin to amax (use -k twice) \n");
@@ -5811,8 +5811,8 @@ void help(double msort) {
     printf("                    2= Sana et al. (2012) (default)                  \n");
     printf("                    3= only use for -p 4 case (AIC/ECSN-boost)       \n");
     printf("                       The distribution is Sana et al., but the range of e and P differ \n");
-    printf("                       AIC : 5-8  Msun: e = 0, 2  days < P < 50 days      \n");
-    printf("                       ECSN: 8-10 Msun: e = 0, 5 days < P < 80 days \n");
+    printf("                       AIC : 5-8  Msun: e = 0 (fixed), 2 days < P < 50 days      \n");
+    printf("                       ECSN: 8-10 Msun: e = 0 (fixed), 5 days < P < 80 days \n");
     printf("                       Sana: > 10 Msun: Sana et al. (2012)           \n");
 	printf("       -s <number> (seed for randomization; 0= randomize by timer)   \n");
 	printf("       -t <0|1|2|3> (tidal field; 0= no tidal field, 1= near-field,  \n");
